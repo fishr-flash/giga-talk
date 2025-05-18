@@ -5,6 +5,12 @@ let debounceTimer: NodeJS.Timeout | undefined;
 import { GigaChatInlineProvider } from './inlineCompletion';
 import { getOutputChannel } from './output';
 
+import * as dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({
+  path: path.resolve(__dirname, '../.env'),
+});
 
 export function activate(context: vscode.ExtensionContext) {
   // показать Output канал при запуске
@@ -13,6 +19,8 @@ export function activate(context: vscode.ExtensionContext) {
   
   outputChannel.show(true); // Открыть автоматически
   outputChannel.appendLine("🚀 GigaChat Extension Activated");
+  outputChannel.appendLine(`process.env.LANG_API_URL: ${process.env.LANG_API_URL}`);
+  outputChannel.appendLine(`__dirname ${__dirname}`);
 
   context.subscriptions.push(
     vscode.languages.registerInlineCompletionItemProvider(
@@ -31,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
     debounceTimer = setTimeout(() => {
       const code = editor.document.getText();
       sendToGigaChat(code);
-    }, 1500);
+    }, 3000);
   });
 
   context.subscriptions.push(disposable);

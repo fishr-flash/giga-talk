@@ -14,9 +14,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@vscode/webview-ui-toolkit": "^1.4.0"
+    "@vscode/webview-ui-toolkit": "^1.4.0",
+    "dotenv": "^16.5.0"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/node": "^22.15.18",
     "@types/vscode": "^1.100.0",
     "typescript": "^5.8.3",
