@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { getOutputChannel } from './output';
 import { fetchGigaChatSuggestion } from './fetchGigaChatSuggestion';
+import { fetchLocalSuggestion } from './fetchLocalSuggestion';
 
 const outputChannel = getOutputChannel();
 
@@ -13,7 +14,6 @@ export class GigaChatInlineProvider implements vscode.InlineCompletionItemProvid
     token: vscode.CancellationToken
   ): Promise<vscode.InlineCompletionList> {
       vscode.window.showInformationMessage('🧠 InlineCompletion triggered!');
-      const outputChannel = getOutputChannel();
 
     const linePrefix = document.lineAt(position).text.substring(0, position.character);
     outputChannel.appendLine(`[Trigger] User typing at line: "${linePrefix}"`);
@@ -25,7 +25,7 @@ export class GigaChatInlineProvider implements vscode.InlineCompletionItemProvid
     }
 
     try {
-      const suggestion = await fetchGigaChatSuggestion(linePrefix);
+      const suggestion = await fetchLocalSuggestion(linePrefix);
 
       if (!suggestion) {
         outputChannel.appendLine(`[Empty] No suggestion returned`);
