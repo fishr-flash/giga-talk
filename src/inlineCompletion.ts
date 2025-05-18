@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { getOutputChannel } from './output';
 import { fetchGigaChatSuggestion } from './fetchGigaChatSuggestion';
 import { fetchLocalSuggestion } from './fetchLocalSuggestion';
+import { stubSuggestion } from './stubSuggestion';
 
 const outputChannel = getOutputChannel();
 
@@ -27,6 +28,7 @@ export class GigaChatInlineProvider implements vscode.InlineCompletionItemProvid
     try {
       const suggestion = await fetchLocalSuggestion(linePrefix);
 
+      // const suggestion = await stubSuggestion(linePrefix);
       if (!suggestion) {
         outputChannel.appendLine(`[Empty] No suggestion returned`);
         return { items: [] };
