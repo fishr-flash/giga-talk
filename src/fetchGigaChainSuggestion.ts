@@ -2,7 +2,7 @@ import { getOutputChannel } from "./output";
 
 const outputChannel = getOutputChannel();
 
-async function fetchLocalSuggestion(prompt: string): Promise<string | null> {
+async function fetchGigaChainSuggestion(prompt: string): Promise<string | null> {
   const apiUrl = process.env.LANG_API_URL || '';
 
     
@@ -18,6 +18,7 @@ async function fetchLocalSuggestion(prompt: string): Promise<string | null> {
       body: JSON.stringify({ input: prompt, system: "Это фрагмент кода на typescript. Заверши ввод строки." }),
     });
 
+    
     if (!response.ok) {
       outputChannel.appendLine(`[HTTP ${response.status}] ${response.statusText}`);
       return null;
@@ -38,4 +39,4 @@ async function fetchLocalSuggestion(prompt: string): Promise<string | null> {
   }
 }
 
-export { fetchLocalSuggestion };
+export { fetchGigaChainSuggestion as fetchLocalSuggestion };
