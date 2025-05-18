@@ -24,14 +24,14 @@ async function fetchLocalSuggestion(prompt: string): Promise<string | null> {
     }
 
     type LocalResponse = {
-      result?: string;
+      response?: string;
     };
 
     const data = await response.json() as LocalResponse;
 
     outputChannel.appendLine(`[LocalAPI] Response: ${JSON.stringify(data)}`);
 
-    return data.result || null;
+    return data.response || null;
   } catch (err) {
     outputChannel.appendLine(`[LocalAPI Error] ${err instanceof Error ? err.message : String(err)}`);
     return null;
