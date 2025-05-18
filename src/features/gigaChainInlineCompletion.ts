@@ -1,11 +1,22 @@
 import * as vscode from 'vscode';
-import { fetchGigaChatSuggestion } from './fetchGigaChatSuggestion';
-import { getOutputChannel } from './output';
+import { getOutputChannel } from '../core/output';
+import { fetchGigaChainSuggestion } from './fetchGigaChainSuggestion';
 
 const outputChannel = getOutputChannel();
 
-// Для отслеживания таймеров по документу
-const debounceTimers = new Map<string, NodeJS.Timeout>();
+// Глобальный таймер и строка
+let debounceTimer: NodeJS.Timeout | undefined;
+let lastLinePrefix: string | undefined;
+let lastDocumentUri: string | undefined;
+
+// Отслеживаем смену активного документа
+vscode.window.onDidChangeActiveTextEditor((editor) => {
+  if (debounceTimer && editor?.document.uri.toString() !== lastDocumentUri) {
+    clearTimeout(debounceTimer);
+    debounceTimer = undefined;
+    outputChannel.appendLine(`[Info] Editor changed — timer cancelled`);
+  }
+});
 
 export class gigaChainInlineCompletion implements vscode.InlineCompletionItemProvider {
   async provideInlineCompletionItems(
@@ -15,7 +26,6 @@ export class gigaChainInlineCompletion implements vscode.InlineCompletionItemPro
     _token: vscode.CancellationToken
   ): Promise<vscode.InlineCompletionList> {
     const linePrefix = document.lineAt(position).text.substring(0, position.character);
-    const uriKey = document.uri.toString();
     outputChannel.appendLine(`[Trigger] User typing at line: "${linePrefix}"`);
 
     if (!linePrefix.trim()) {
@@ -23,16 +33,21 @@ export class gigaChainInlineCompletion implements vscode.InlineCompletionItemPro
       return { items: [] };
     }
 
-    // Очищаем предыдущий таймер, если есть
-    if (debounceTimers.has(uriKey)) {
-      clearTimeout(debounceTimers.get(uriKey));
+    if (linePrefix === lastLinePrefix) {
+      outputChannel.appendLine(`[Skip] Line prefix unchanged since last request`);
+      return { items: [] };
+    }
+
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
     }
 
     return await new Promise((resolve) => {
-      const timer = setTimeout(async () => {
-        // Проверим, что активный документ тот же
+      lastDocumentUri = document.uri.toString();
+
+      debounceTimer = setTimeout(async () => {
         const activeEditor = vscode.window.activeTextEditor;
-        if (!activeEditor || activeEditor.document.uri.toString() !== uriKey) {
+        if (!activeEditor || activeEditor.document !== document) {
           outputChannel.appendLine(`[Cancel] Editor context changed, skipping suggestion`);
           resolve({ items: [] });
           return;
@@ -40,7 +55,7 @@ export class gigaChainInlineCompletion implements vscode.InlineCompletionItemPro
 
         try {
           vscode.window.showInformationMessage('🧠 InlineCompletion triggered after delay');
-          const suggestion = await fetchGigaChatSuggestion(linePrefix);
+          const suggestion = await fetchGigaChainSuggestion(linePrefix);
 
           if (!suggestion) {
             outputChannel.appendLine(`[Empty] No suggestion returned`);
@@ -49,6 +64,7 @@ export class gigaChainInlineCompletion implements vscode.InlineCompletionItemPro
           }
 
           outputChannel.appendLine(`[Suggest] "${suggestion}"`);
+          lastLinePrefix = linePrefix;
 
           resolve({
             items: [
@@ -61,10 +77,10 @@ export class gigaChainInlineCompletion implements vscode.InlineCompletionItemPro
         } catch (error) {
           outputChannel.appendLine(`[Error] ${error instanceof Error ? error.message : String(error)}`);
           resolve({ items: [] });
+        } finally {
+          debounceTimer = undefined;
         }
       }, 1500);
-
-      debounceTimers.set(uriKey, timer);
     });
   }
 }

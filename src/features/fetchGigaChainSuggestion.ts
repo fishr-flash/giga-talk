@@ -1,8 +1,8 @@
-import { getOutputChannel } from "./output";
+import { getOutputChannel } from "../core/output";
 
 const outputChannel = getOutputChannel();
 
-async function fetchGigaChainSuggestion(prompt: string): Promise<string | null> {
+export async function fetchGigaChainSuggestion(prompt: string): Promise<string | null> {
   const apiUrl = process.env.LANG_API_URL || '';
 
     
@@ -38,5 +38,3 @@ async function fetchGigaChainSuggestion(prompt: string): Promise<string | null> 
     return null;
   }
 }
-
-export { fetchGigaChainSuggestion as fetchLocalSuggestion };

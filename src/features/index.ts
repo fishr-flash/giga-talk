@@ -1,0 +1,1 @@
+export { gigaChainInlineCompletion } from "./gigaChainInlineCompletion";

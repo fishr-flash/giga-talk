@@ -1,12 +1,11 @@
 import * as vscode from 'vscode';
 
-let debounceTimer: NodeJS.Timeout | undefined;
 
-import { gigaChainInlineCompletion } from './gigaChainInlineCompletion';
-import { getOutputChannel } from './output';
+import { getOutputChannel } from './core/output';
 
 import * as dotenv from 'dotenv';
 import path from 'path';
+import { gigaChainInlineCompletion } from './features';
 
 dotenv.config({
   path: path.resolve(__dirname, '../.env'),
