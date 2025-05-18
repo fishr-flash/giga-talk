@@ -9,8 +9,9 @@ export class GigaChatInlineProvider implements vscode.InlineCompletionItemProvid
   async provideInlineCompletionItems(
     document: vscode.TextDocument,
     position: vscode.Position,
-    context: vscode.InlineCompletionContext,
-    token: vscode.CancellationToken
+    // /TODO: разобраться с этими параметрами
+    _context: vscode.InlineCompletionContext,
+    _token: vscode.CancellationToken
   ): Promise<vscode.InlineCompletionList> {
       vscode.window.showInformationMessage('🧠 InlineCompletion triggered!');
 
