@@ -49,6 +49,11 @@ export class GigaChatInlineProvider implements vscode.InlineCompletionItemProvid
 }
 
 async function fetchGigaChatSuggestion(prefix: string): Promise<string | null> {
+
+    const fakeSuggestion = `✨ Продолжение для: "${prefix}"`;
+  outputChannel.appendLine(`[Mock] Returning fake suggestion: "${fakeSuggestion}"`);
+    return fakeSuggestion;
+    // Убрать комментарий ниже, чтобы использовать реальный API
   const apiUrl = 'https://example.com/gigachat'; // заменить на реальный
   const token = 'your-token'; // заменить на реальный или брать из settings
 
@@ -79,7 +84,7 @@ async function fetchGigaChatSuggestion(prefix: string): Promise<string | null> {
 
     return data.completion || null;
   } catch (err) {
-    outputChannel.appendLine(`[Fetch Error] ${err instanceof Error ? err.message : String(err)}`);
+    // outputChannel.appendLine(`[Fetch Error] ${err instanceof Error ? err.message : String(err)}`);
     return null;
   }
 }
