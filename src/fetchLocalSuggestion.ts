@@ -15,7 +15,7 @@ async function fetchLocalSuggestion(prompt: string): Promise<string | null> {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ input: prompt }),
+      body: JSON.stringify({ input: prompt, system: "Это фрагмент кода на typescript. Заверши ввод строки." }),
     });
 
     if (!response.ok) {
