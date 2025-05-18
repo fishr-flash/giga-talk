@@ -1,0 +1,38 @@
+{
+  "name": "giga-chat",
+  "version": "1.0.0",
+  "main": "out/extension.js",
+  "activationEvents": [
+    "*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc -p ./"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@vscode/webview-ui-toolkit": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.18",
+    "@types/vscode": "^1.100.0",
+    "typescript": "^5.8.3",
+    "vscode": "^1.1.37"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "giga-chat.startSession",
+        "title": "Start GigaChat Session"
+      }
+    ]
+  },
+  "publisher": "your-name",
+  "displayName": "GigaChat Assistant",
+  "engines": {
+    "vscode": "^1.75.0"
+  }
+}
