@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 let debounceTimer: NodeJS.Timeout | undefined;
 
-import { GigaChatInlineProvider } from './inlineCompletion';
+import { gigaChainInlineCompletion } from './gigaChainInlineCompletion';
 import { getOutputChannel } from './output';
 
 import * as dotenv from 'dotenv';
@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.languages.registerInlineCompletionItemProvider(
       "*", // или ограничить на js/ts
-      new GigaChatInlineProvider()
+      new gigaChainInlineCompletion()
     )
   );
   const disposable = vscode.workspace.onDidChangeTextDocument((event) => {

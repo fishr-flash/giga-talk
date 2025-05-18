@@ -5,7 +5,7 @@ import { getOutputChannel } from './output';
 const outputChannel = getOutputChannel();
 
 
-export class GigaChatInlineProvider implements vscode.InlineCompletionItemProvider {
+export class gigaChainInlineCompletion implements vscode.InlineCompletionItemProvider {
   async provideInlineCompletionItems(
     document: vscode.TextDocument,
     position: vscode.Position,
